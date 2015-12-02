@@ -1,0 +1,16 @@
+{
+  "manifest_version": 2,
+
+  "name": "GH CSV Enhancer",
+  "description": "Add very basic statistics to CSV tables, when viewed in GitHub.",
+  "version": "0.1",
+
+  "content_scripts": [
+    {
+      "matches": ["https://github.com/*/blob/*.csv"],
+      "css" : ["style.css"],
+      "js": ["jquery-2.1.4.min.js", "app.js"]
+    }
+  ]
+
+}
