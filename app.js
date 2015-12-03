@@ -136,8 +136,3 @@ run();
 $('input.blob-filter').keyup(function(){
   setTimeout(run, 50);
 });
-
-
-var btn = $('<a id="show_hide_stats" class="btn btn-sm " id="raw-url">Show Stats</a>');
-btn.click(run);
-$('div.file-header div.file-actions div.btn-group').prepend(btn);
