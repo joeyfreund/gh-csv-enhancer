@@ -15,7 +15,6 @@ function table_row_2_array_of_numeric_values(tr){
   var values = [];
 
   $(tr).find('td:not(.blob-num)').each(function(){
-
     var value = Number($(this).text());
     values.push(isNaN(value) ? null : value);
   });
@@ -34,10 +33,10 @@ function load_csv_column_values(){
 
     for(var i=0; i < get_column_count(); i++){ columns.push([]);}
 
-    $('.markdown-body table.csv-data tbody .js-file-line').each(function() {
+    $('.markdown-body table.csv-data tbody .js-file-line:visible').each(function() {
       var row_values = table_row_2_array_of_numeric_values(this);
       for(var i=0; i < row_values.length; i++){
-        if(row_values[i]){
+        if(row_values[i] !== null){
           columns[i].push(row_values[i]);
         }
       }
@@ -69,7 +68,7 @@ function aggregate_columns(columns, aggregate_column){
 
 
 function prepend_row(label, values){
-  var tr = $('<tr></tr>');
+  var tr = $('<tr class="csv-stats-line"></tr>');
   tr.append('<td class="blob-num js-line-number">' + label + '</td>');
 
   for (var i = 0; i < values.length; i++) {
@@ -79,7 +78,7 @@ function prepend_row(label, values){
       value = value.toFixed(2);
     }
 
-    tr.append('<td class="csv-aggregation">' + (value ? value : ' ') + '</td>');
+    tr.append('<td class="csv-aggregation">' + (value === null ? ' ' : value) + '</td>');
   }
 
   $('.markdown-body table.csv-data tbody').prepend(tr);
@@ -110,10 +109,35 @@ var aggregations = {
 //==============================================================================
 // The actual script ...
 
-var columns = load_csv_column_values();
+function run(){
+  var columns = load_csv_column_values();
 
-for (var label in aggregations) {
-  if (aggregations.hasOwnProperty(label)) {
-    prepend_row(label, aggregate_columns(columns, aggregations[label]));
+  $('.csv-stats-line').remove();
+
+  // If all columns are empty (i.e. no data), don't do anything
+  if (columns.reduce(function(c1, c2) { return c1.length + c2.length; }) == 0){
+    return;
+  }
+
+  for (var label in aggregations) {
+    if (aggregations.hasOwnProperty(label)) {
+      prepend_row(label, aggregate_columns(columns, aggregations[label]));
+    }
   }
 }
+
+
+
+run();
+
+// A hack ...
+// Every time someone hanges the filter value (above the CSV table),
+// give GitHub 50 ms to filter the CSV data, and then refresh the stats
+$('input.blob-filter').keyup(function(){
+  setTimeout(run, 50);
+});
+
+
+var btn = $('<a id="show_hide_stats" class="btn btn-sm " id="raw-url">Show Stats</a>');
+btn.click(run);
+$('div.file-header div.file-actions div.btn-group').prepend(btn);
