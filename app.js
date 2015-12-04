@@ -22,7 +22,7 @@ function table_row_2_array_of_numeric_values(tr){
     } else {
       value = Number(value);
     }
-    
+
     values.push(isNaN(value) ? null : value);
   });
 
@@ -109,6 +109,14 @@ var aggregations = {
     var copy = column.concat();
     copy.sort();
     return copy[Math.floor(copy.length / 2)];
+  },
+
+  'MIN' : function(column){
+    return column.reduce(function(x, y) { return x < y ? x : y; });
+  },
+
+  'MAX' : function(column){
+    return column.reduce(function(x, y) { return x > y ? x : y; });
   }
 }
 
