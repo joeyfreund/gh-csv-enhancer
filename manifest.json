@@ -3,7 +3,7 @@
 
   "name": "GH CSV Enhancer",
   "description": "Add very basic statistics to CSV tables, when viewed in GitHub.",
-  "version": "0.1",
+  "version": "0.1.2",
 
   "content_scripts": [
     {
