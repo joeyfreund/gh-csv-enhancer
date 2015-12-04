@@ -107,7 +107,7 @@ var aggregations = {
 
   'MEDIAN' : function(column){
     var copy = column.concat();
-    copy.sort();
+    copy.sort(function(a,b) { return a - b; });
     return copy[Math.floor(copy.length / 2)];
   },
 
