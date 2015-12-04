@@ -15,7 +15,14 @@ function table_row_2_array_of_numeric_values(tr){
   var values = [];
 
   $(tr).find('td:not(.blob-num)').each(function(){
-    var value = Number($(this).text());
+    var value = $(this).text().trim();
+
+    if(value == ''){
+      value = null;
+    } else {
+      value = Number(value);
+    }
+    
     values.push(isNaN(value) ? null : value);
   });
 
